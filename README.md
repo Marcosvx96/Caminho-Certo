@@ -39,6 +39,3 @@ Este projeto está alinhado ao **Objetivo de Desenvolvimento Sustentável 4 (ODS
 
 ## 🚀 Como Executar o Projeto (Em Desenvolvimento)
 
-1. Clona este repositório:
-   ```bash
-   git clone [https://github.com/teu-utilizador/caminho-certo-mvp.git](https://github.com/teu-utilizador/caminho-certo-mvp.git)
