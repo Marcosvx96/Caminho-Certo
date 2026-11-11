@@ -6,6 +6,11 @@ on:
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
+    inputs:
+      url:
+        description: "Endpoint a verificar (vazio = health do app publicado)"
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -22,9 +27,10 @@ jobs:
     steps:
       - name: Consultar endpoint de saúde
         id: health
+        env:
+          URL: ${{ inputs.url || 'https://caminho-certo.streamlit.app/~/+/_stcore/health' }}
         run: |
           set -euo pipefail
-          URL="https://caminho-certo.streamlit.app/~/+/_stcore/health"
           echo "Endpoint: $URL"
           for tentativa in 1 2 3; do
             echo "Tentativa $tentativa de 3..."
@@ -44,11 +50,12 @@ jobs:
         if: failure()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          URL: ${{ inputs.url || 'https://caminho-certo.streamlit.app/~/+/_stcore/health' }}
         run: |
           set -euo pipefail
           AGORA=$(date -u '+%d/%m/%Y %H:%M UTC')
           URL_RUN="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          CORPO=$(printf 'O monitoramento não recebeu **ok** em 3 tentativas.\n\n- **Detectado em:** %s\n- **Endpoint:** `https://caminho-certo.streamlit.app/~/+/_stcore/health`\n- **Execução:** %s\n\nO app pode estar reiniciando ou com erro no script. Verifique os logs em Streamlit Cloud → Manage app.' "$AGORA" "$URL_RUN")
+          CORPO=$(printf 'O monitoramento não recebeu **ok** em 3 tentativas.\n\n- **Detectado em:** %s\n- **Endpoint:** `%s`\n- **Execução:** %s\n\nO app pode estar reiniciando ou com erro no script. Verifique os logs em Streamlit Cloud → Manage app.' "$AGORA" "$URL" "$URL_RUN")
           EXISTENTE=$(gh issue list --repo "$GITHUB_REPOSITORY" --label incidente --state open --json number --jq '.[0].number // empty')
           if [ -n "$EXISTENTE" ]; then
             gh issue comment "$EXISTENTE" --repo "$GITHUB_REPOSITORY" --body "🔴 Ainda fora do ar. $CORPO"
