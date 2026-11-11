@@ -1,0 +1,73 @@
+name: Monitoramento do app
+
+# Verifica a cada 15 minutos se o app publicado continua respondendo.
+# Também pode ser disparado à mão na aba Actions.
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: monitoramento
+  cancel-in-progress: false
+
+jobs:
+  disponibilidade:
+    name: Checar disponibilidade
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar endpoint de saúde
+        id: health
+        run: |
+          set -euo pipefail
+          URL="https://caminho-certo.streamlit.app/~/+/_stcore/health"
+          echo "Endpoint: $URL"
+          for tentativa in 1 2 3; do
+            echo "Tentativa $tentativa de 3..."
+            if RESPOSTA=$(curl -fsS --max-time 30 "$URL") && [ "$RESPOSTA" = "ok" ]; then
+              echo "status=UP" >> "$GITHUB_OUTPUT"
+              echo "App saudável: $RESPOSTA"
+              exit 0
+            fi
+            echo "Sem resposta saudável."
+            sleep 20
+          done
+          echo "status=DOWN" >> "$GITHUB_OUTPUT"
+          echo "::error::App não respondeu 'ok' no endpoint de saúde"
+          exit 1
+
+      - name: Registrar queda (status DOWN)
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          AGORA=$(date -u '+%d/%m/%Y %H:%M UTC')
+          URL_RUN="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          CORPO=$(printf 'O monitoramento não recebeu **ok** em 3 tentativas.\n\n- **Detectado em:** %s\n- **Endpoint:** `https://caminho-certo.streamlit.app/~/+/_stcore/health`\n- **Execução:** %s\n\nO app pode estar reiniciando ou com erro no script. Verifique os logs em Streamlit Cloud → Manage app.' "$AGORA" "$URL_RUN")
+          EXISTENTE=$(gh issue list --repo "$GITHUB_REPOSITORY" --label incidente --state open --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTENTE" ]; then
+            gh issue comment "$EXISTENTE" --repo "$GITHUB_REPOSITORY" --body "🔴 Ainda fora do ar. $CORPO"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" \
+              --title "🔴 App fora do ar — $AGORA" \
+              --label incidente \
+              --body "$CORPO"
+          fi
+
+      - name: Encerrar incidente (recuperação)
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          EXISTENTE=$(gh issue list --repo "$GITHUB_REPOSITORY" --label incidente --state open --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTENTE" ]; then
+            gh issue comment "$EXISTENTE" --repo "$GITHUB_REPOSITORY" \
+              --body "✅ App voltou a responder **ok** no endpoint de saúde. Incidente encerrado automaticamente."
+            gh issue close "$EXISTENTE" --repo "$GITHUB_REPOSITORY"
+          fi

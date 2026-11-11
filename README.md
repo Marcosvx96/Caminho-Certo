@@ -108,6 +108,31 @@ Para uso real da associação, o próximo passo técnico é:
 O código já concentra o acesso ao banco em `src/database.py`, então a troca é
 localizada: basta adaptar a conexão e os `INSERT ... ON CONFLICT` para o novo banco.
 
+## Monitoramento pós-lançamento
+
+![Monitoramento do app](https://github.com/Marcosvx96/Caminho-Certo/actions/workflows/monitor.yml/badge.svg)
+
+O app publicado é verificado **a cada 15 minutos** por um workflow do GitHub Actions
+([`.github/workflows/monitor.yml`](.github/workflows/monitor.yml)).
+
+| Item | Configuração |
+|---|---|
+| Alvo | `https://caminho-certo.streamlit.app/~/+/_stcore/health` |
+| Frequência | `*/15 * * * *` (a cada 15 min) + execução manual |
+| Critério de sucesso | HTTP 200 com corpo exatamente `ok` |
+| Retentativas | 3 tentativas com 20 s de intervalo |
+| Alerta | abre uma issue com a etiqueta `incidente` (e o GitHub também notifica a falha do workflow) |
+| Recuperação | quando volta a responder, comenta e **fecha** a issue automaticamente |
+
+**Por que não monitorar a URL principal:** `https://caminho-certo.streamlit.app/` devolve
+HTTP 200 mesmo quando o app está quebrado, porque é apenas a página HTML que hospeda o
+app em um iframe. O endpoint `_stcore/health` é o que reflete o processo Streamlit real —
+se ele parar de responder `ok`, é queda de verdade.
+
+Os históricos de execução ficam públicos em
+[Actions → Monitoramento do app](https://github.com/Marcosvx96/Caminho-Certo/actions/workflows/monitor.yml)
+e o selo acima fica verde enquanto o app estiver no ar.
+
 ## Apresentação
 
 O PDF de apresentação do projeto está em
