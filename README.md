@@ -133,6 +133,11 @@ Os históricos de execução ficam públicos em
 [Actions → Monitoramento do app](https://github.com/Marcosvx96/Caminho-Certo/actions/workflows/monitor.yml)
 e o selo acima fica verde enquanto o app estiver no ar.
 
+O ciclo completo foi testado de forma controlada em
+[issue #1](https://github.com/Marcosvx96/Caminho-Certo/issues/1): apontando o workflow
+para um endpoint inexistente, a issue de incidente foi aberta automaticamente e, na
+execução seguinte com o endpoint real, comentada e fechada sozinha.
+
 ## Apresentação
 
 O PDF de apresentação do projeto está em
