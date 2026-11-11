@@ -67,6 +67,45 @@ Para começar com dados de demonstração (5 alunos + 3 dias de histórico):
 
 Para zerar tudo, basta apagar `data/db.sqlite3`.
 
+## Deploy
+
+O sistema está publicado no **Streamlit Community Cloud** (plano gratuito):
+
+### 🔗 https://caminho-certo.streamlit.app
+
+O link abre com dados de demonstração (5 alunos na Turma A e 3 dias de chamada),
+para que qualquer pessoa consiga navegar pelas três telas sem cadastrar nada.
+
+| Configuração | Valor |
+|---|---|
+| Repositório | `Marcosvx96/Caminho-Certo` |
+| Branch | `main` |
+| Arquivo principal | `src/app.py` |
+| Python | 3.14 |
+| Secret | `demo = true` |
+
+### Como os dados de demonstração funcionam
+
+O seed é **opcional e desligado por padrão** (`src/demo.py`). Ele só roda quando:
+
+- o secret `demo = true` está definido (Streamlit Cloud), ou
+- a variável `CAMINHO_CERTO_DEMO=1` está definida (uso local).
+
+E só popula o banco **se ele estiver vazio** — nunca sobrescreve dados reais. Em uso
+normal, sem o secret, o app abre vazio e a associação cadastra seus próprios alunos.
+
+### Limitação do plano gratuito
+
+O banco SQLite fica no disco do container, **que é recriado a cada reinício ou
+republicação** do app. Para o link de avaliação com dados fictícios isso é suficiente.
+Para uso real da associação, o próximo passo técnico é:
+
+- trocar o SQLite por um banco gerenciado (Postgres, Turso/libSQL), ou
+- hospedar em um serviço com disco persistente (Railway, Fly.io, VPS).
+
+O código já concentra o acesso ao banco em `src/database.py`, então a troca é
+localizada: basta adaptar a conexão e os `INSERT ... ON CONFLICT` para o novo banco.
+
 ## Apresentação
 
 O PDF de apresentação do projeto está em
