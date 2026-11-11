@@ -16,6 +16,35 @@ preventiva de alunos em risco de evasão, na Associação Caminho Certo (Jundiap
 | Apoio | `render_alunos` | Cadastro e remoção de alunos |
 | Apoio | `render_relatorios` | Indicadores, histórico e exportação CSV |
 
+## Telas do sistema
+
+Capturas reais do sistema em execução, com os dados de demonstração
+(`scripts/seed_demo.py`). Para regerá-las, veja a seção [Apresentação](#apresentação).
+
+### 1. Menu Inicial
+
+Ponto de partida da coordenação: a chamada em destaque e os atalhos em grade.
+
+![Menu Inicial](docs/screenshots/01-menu-inicial.png)
+
+### 2. Chamada Diária
+
+Turma e data no topo, um cartão por aluno e contadores de presença em tempo real.
+
+![Chamada Diária](docs/screenshots/02-chamada-diaria.png)
+
+### 3. Resultados da Chamada
+
+Confirmação do salvamento, alerta de ausências recorrentes e taxa de comparecimento.
+
+![Resultados da Chamada](docs/screenshots/03-resultados.png)
+
+### Telas de apoio
+
+| Relatórios | Cadastro de Alunos |
+|---|---|
+| ![Relatórios](docs/screenshots/04-relatorios.png) | ![Cadastro de Alunos](docs/screenshots/05-cadastro-alunos.png) |
+
 ## Como rodar
 
 ```powershell
@@ -100,6 +129,15 @@ Recomendações:
 - Defina prazo de retenção e responsável pelo tratamento dos dados
 - Colete consentimento dos responsáveis no cadastro
 
+## Autoria e participação
+
+| Pessoa | Participação |
+|---|---|
+| **Marcos Vinicius** | Concepção e desenvolvimento do MVP: levantamento de requisitos, modelagem do banco, implementação das telas, testes automatizados e documentação. |
+| **Ana Paula Souza** | Colaboração no contexto e no levantamento do problema: a realidade da associação, o desafio da evasão e as necessidades que o sistema deveria atender. |
+
+Projeto desenvolvido para a **Associação Caminho Certo** (Jundiapeba, Mogi das Cruzes).
+
 ## Estrutura
 
 ```
@@ -107,6 +145,13 @@ Caminho Certo/
 ├── .github/workflows/ci.yml
 ├── .streamlit/config.toml
 ├── data/                    # banco local (ignorado no Git)
+├── docs/
+│   ├── Apresentacao_Caminho_Certo.pdf
+│   └── screenshots/         # capturas usadas no README e no PDF
+├── scripts/
+│   ├── seed_demo.py         # dados de demonstração
+│   ├── capturar_telas.py    # captura as telas do app
+│   └── gerar_pdf.py         # monta o PDF de apresentação
 ├── src/
 │   ├── app.py               # interface e roteamento
 │   ├── database.py          # CRUD e schema SQLite
