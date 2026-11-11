@@ -3,6 +3,8 @@
 MVP em **Python + Streamlit + SQLite** para registro de frequência e identificação
 preventiva de alunos em risco de evasão, na Associação Caminho Certo (Jundiapeba).
 
+**▶ App publicado:** https://caminho-certo.streamlit.app
+
 - **ODS 4** — Educação de Qualidade
 - **ODS 10** — Redução das Desigualdades
 

@@ -235,6 +235,12 @@ def capa(pdf: Apresentacao) -> None:
     pdf.set_text_color(*CINZA)
     pdf.text(MARGEM + 14, 166, "Apresentação do projeto  ·  Novembro de 2026")
 
+    # link do app publicado, alinhado à direita
+    pdf.set_font("Body", "B", 8.5)
+    pdf.set_text_color(*VERDE_ESCURO)
+    rotulo = "caminho-certo.streamlit.app"
+    pdf.text(MARGEM + CONTEUDO - 14 - pdf.get_string_width(rotulo), 166, rotulo)
+
     pdf.rodape()
 
 
@@ -685,7 +691,11 @@ def encerramento(pdf: Apresentacao) -> None:
         pdf.text(MARGEM + 88, lin, desc)
         lin += 8.5
     pdf.set_text_color(150, 150, 150)
-    pdf.text(MARGEM + 7, yc + 42, "python -m pytest tests/ -v   →   21 passed")
+    pdf.text(MARGEM + 7, yc + 42, "python -m pytest tests/ -v   →   22 passed")
+
+    pdf.set_font("Body", "B", 8.6)
+    pdf.set_text_color(*VERDE_ESCURO)
+    pdf.text(MARGEM, yc + 52, "Publicado em caminho-certo.streamlit.app")
 
     # proximos passos
     xd = MARGEM + 160
