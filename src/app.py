@@ -9,6 +9,7 @@ Apoio: Cadastro de Alunos e Relatórios.
 
 from __future__ import annotations
 
+import os
 from datetime import date
 
 import pandas as pd
@@ -25,6 +26,7 @@ from database import (
     remover_aluno,
     salvar_chamada,
 )
+from demo import semear_demo
 from reports import (
     csv_relatorio,
     historico,
@@ -495,7 +497,19 @@ def render_relatorios() -> None:
 # ---------------------------------------------------------------------------
 # Roteamento
 # ---------------------------------------------------------------------------
+def _demo_ativo() -> bool:
+    """Liga os dados de exemplo sem afetar o uso real (ver src/demo.py)."""
+    if os.environ.get("CAMINHO_CERTO_DEMO") == "1":
+        return True
+    try:
+        return bool(st.secrets.get("demo", False))
+    except Exception:
+        return False
+
+
 init_db()
+if _demo_ativo():
+    semear_demo()
 apply_custom_styles()
 _init_state()
 

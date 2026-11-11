@@ -206,3 +206,18 @@ def test_csv_exporta_cabecalho_e_linhas():
     assert linhas[0][:3] == ["ID", "Nome", "Turma"]
     assert linhas[1][1] == "Ana"
     assert linhas[1][-1] == "100,0"
+
+
+# ---------------------------------------------------------------------------
+# Dados de demonstração (usados no app publicado)
+# ---------------------------------------------------------------------------
+def test_semear_demo_cria_alunos_e_nao_duplica():
+    from demo import semear_demo
+
+    assert semear_demo() is True
+    assert len(listar_alunos()) == 5
+    assert len(faltas_consecutivas(3)) == 2  # Pedro e Carlos com 3 faltas
+
+    # Segunda chamada não duplica nem falha
+    assert semear_demo() is False
+    assert len(listar_alunos()) == 5

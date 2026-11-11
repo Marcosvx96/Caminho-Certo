@@ -203,7 +203,7 @@ def capa(pdf: Apresentacao) -> None:
     for txt, cor in (
         ("ODS 4 · Educação de Qualidade", VERDE),
         ("ODS 10 · Redução das Desigualdades", VERDE_ESCURO),
-        ("21 testes automatizados", TINTA),
+        ("22 testes automatizados", TINTA),
     ):
         x += pdf.etiqueta(x, 112, txt, cor_fundo=cor, tam=7.5) + 3
 
@@ -330,7 +330,7 @@ def arquitetura(pdf: Apresentacao) -> None:
         ("Streamlit 1.67", "interface web reativa, sem front-end separado"),
         ("SQLite", "banco de arquivo único, zero infraestrutura"),
         ("pandas", "tabelas de indicadores e exportação"),
-        ("pytest", "21 testes automatizados"),
+        ("pytest", "22 testes automatizados"),
         ("GitHub Actions", "CI rodando a suíte a cada push"),
     ]
     for nome, desc in itens:
@@ -406,7 +406,7 @@ def arquitetura(pdf: Apresentacao) -> None:
     pdf.text(
         MARGEM + 6,
         ye + 18,
-        "tests/  (banco isolado + 21 testes)   ·   scripts/  (captura de telas e dados de exemplo)   ·   "
+        "tests/  (banco isolado + 22 testes)   ·   scripts/  (captura de telas e dados de exemplo)   ·   "
         ".github/workflows/ci.yml   ·   .streamlit/config.toml",
     )
 
@@ -594,7 +594,7 @@ def qualidade(pdf: Apresentacao) -> None:
         ("Relatórios vazios no código", "Indicadores por aluno, histórico e exportação CSV implementados"),
         ("Chamada duplicada no mesmo dia", "UNIQUE (aluno_id, data) + UPSERT: reenvio atualiza"),
         ("CSS de acessibilidade não aplicava", "Seletores atualizados para o Streamlit 1.67 (conferido no DOM)"),
-        ("Apenas 2 testes vagos", "21 testes reais: banco, regras de negócio, relatórios e CSV"),
+        ("Apenas 2 testes vagos", "22 testes reais: banco, regras de negócio, relatórios e CSV"),
         ("Nenhum controle de versão dos dados", ".gitignore exclui o banco; tema fixo em config.toml"),
     ]
     yy = y + 6
@@ -616,7 +616,7 @@ def qualidade(pdf: Apresentacao) -> None:
     pdf.texto(xd, y, w, "VERIFICAÇÃO", tam=8.5, estilo="B", cor=CINZA, lh=4)
 
     numeros = [
-        ("21", "testes automatizados, 100% passando"),
+        ("22", "testes automatizados, 100% passando"),
         ("6", "correções na especificação original"),
         ("0", "erros no console durante o fluxo completo"),
     ]
@@ -700,7 +700,7 @@ def encerramento(pdf: Apresentacao) -> None:
         [
             "**Período da turma** (matutino/vespertino) como campo próprio.",
             "**Datas de validação** do documento original precisam ser replanejadas.",
-            "Trocar a métrica de testes do documento por **21 testes reais**.",
+            "Trocar a métrica de testes do documento por **22 testes reais**.",
         ],
         tam=8.5,
         lh=4.5,
